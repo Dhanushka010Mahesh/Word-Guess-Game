@@ -15,6 +15,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class WordGuessActivity extends AppCompatActivity {
 
+    private String [] words={"Dhanushka","Mahesh","Eranga","Jayarathna"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +35,24 @@ public class WordGuessActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String wordGuess=(getUserGuessWord.getText().toString()).trim();
-                Toast.makeText(WordGuessActivity.this, "Word is "+wordGuess, Toast.LENGTH_SHORT).show();
+
+                boolean checkValid=false;
+                for (int i=0;i<words.length;i++){
+                    if (wordGuess.equalsIgnoreCase(words[i])){
+                        checkValid=true;
+
+                        break;
+                    }
+                }
+
+                if (checkValid){
+                    Toast.makeText(WordGuessActivity.this, "Word is "+wordGuess, Toast.LENGTH_SHORT).show();
+                }else {
+                    double newPoint=MainActivity.player.getPoint()-10;
+                    MainActivity.player.setPoint(newPoint);
+                    disPoint.setText(String.valueOf(MainActivity.player.getPoint()));
+                }
+
             }
         });
 
