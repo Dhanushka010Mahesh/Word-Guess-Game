@@ -45,7 +45,7 @@
         android:id="@+id/btnHome"
         android:layout_width="287dp"
         android:layout_height="45dp"
-        android:layout_marginTop="232dp"
+        android:layout_marginTop="160dp"
         android:text="Home"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.572"
