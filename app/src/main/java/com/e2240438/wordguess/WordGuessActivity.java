@@ -1,5 +1,6 @@
 package com.e2240438.wordguess;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -46,11 +47,14 @@ public class WordGuessActivity extends AppCompatActivity {
                 }
 
                 if (checkValid){
+                    Intent intent = new Intent(WordGuessActivity.this, WinActivity.class);
+                    startActivity(intent);
                     Toast.makeText(WordGuessActivity.this, "Word is "+wordGuess, Toast.LENGTH_SHORT).show();
                 }else {
                     double newPoint=MainActivity.player.getPoint()-10;
                     MainActivity.player.setPoint(newPoint);
                     disPoint.setText(String.valueOf(MainActivity.player.getPoint()));
+                    Toast.makeText(WordGuessActivity.this, "Guess word is invalid", Toast.LENGTH_SHORT).show();
                 }
 
             }
