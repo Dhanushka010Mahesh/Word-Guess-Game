@@ -24,6 +24,15 @@ public class BestRateActivity extends AppCompatActivity {
         String data=dataShow.getText().toString();
         dataShow.setText(Controller.toStringList());
 
+
+        Button resetBtn=findViewById(R.id.btnReset);
+        resetBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Controller.listClear();
+            }
+        });
+
         Toast.makeText(BestRateActivity.this, "Welcome To "+MainActivity.player.getName(), Toast.LENGTH_SHORT).show();
         Button backBtn=findViewById(R.id.btnBackToMenu);
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -33,12 +42,6 @@ public class BestRateActivity extends AppCompatActivity {
             }
         });
 
-        Button resetBtn=findViewById(R.id.btnReset);
-        resetBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Controller.listClear();
-            }
-        });
+
     }
 }

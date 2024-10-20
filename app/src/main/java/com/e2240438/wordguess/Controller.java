@@ -36,19 +36,19 @@ public class Controller {
 }
 class Player{
     private String name;
-    private double point;
+    private double mark;
 
     public Player(String name){
         this.name=name;
-        this.point=100;
+        this.mark=0;
     }
 
-    public double getPoint() {
-        return point;
+    public double getMark() {
+        return mark;
     }
 
     public void setPoint(double point) {
-        this.point = point;
+        this.mark = point;
     }
 
     public String getName() {
@@ -57,6 +57,6 @@ class Player{
 
     @Override
     public String toString() {
-        return " " + name + " - " +" point = " + point +"\n";
+        return " " + name + " - " +" point = " + mark +"\n";
     }
 }
