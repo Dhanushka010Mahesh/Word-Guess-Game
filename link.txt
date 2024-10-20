@@ -1,0 +1,5 @@
+https://api-ninjas.com/profile
+
+https://random-word-api.herokuapp.com/word
+
+https://api.api-ninjas.com/v1/rhyme?word=" + "App"
