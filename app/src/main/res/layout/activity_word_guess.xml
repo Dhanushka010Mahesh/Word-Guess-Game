@@ -11,22 +11,22 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="196dp"
         android:text="Marks"
         android:textColor="@color/black"
         app:layout_constraintEnd_toStartOf="@+id/txtDisplayMarks"
-        app:layout_constraintHorizontal_bias="0.682"
+        app:layout_constraintHorizontal_bias="0.609"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="111dp"
-        android:layout_height="106dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="108dp"
+        android:layout_height="112dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtDisplayTime"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
@@ -75,8 +75,8 @@
 
     <Button
         android:id="@+id/btnSubmitGuessWord"
-        android:layout_width="191dp"
-        android:layout_height="39dp"
+        android:layout_width="328dp"
+        android:layout_height="40dp"
         android:layout_marginTop="20dp"
         android:text="Submit"
         app:layout_constraintEnd_toEndOf="parent"
@@ -85,8 +85,8 @@
 
     <Button
         android:id="@+id/btnGetLength"
-        android:layout_width="190dp"
-        android:layout_height="61dp"
+        android:layout_width="320dp"
+        android:layout_height="38dp"
         android:layout_marginTop="4dp"
         android:text="Get Word Length(enable)"
         app:layout_constraintEnd_toEndOf="parent"
@@ -95,8 +95,8 @@
 
     <Button
         android:id="@+id/btnRhymes"
-        android:layout_width="187dp"
-        android:layout_height="59dp"
+        android:layout_width="326dp"
+        android:layout_height="39dp"
         android:text="Similar Word (disable)"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -108,7 +108,7 @@
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="200dp"
         android:text="Point"
         android:textColor="@color/black"
         app:layout_constraintEnd_toStartOf="@+id/txtDisplayPoints"
@@ -120,9 +120,21 @@
         android:id="@+id/txtDisplayPoints"
         android:layout_width="93dp"
         android:layout_height="26dp"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="200dp"
         android:layout_marginEnd="36dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtDisplayTime"
+        android:layout_width="166dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="sans-serif-black"
+        android:textColor="@color/design_default_color_error"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

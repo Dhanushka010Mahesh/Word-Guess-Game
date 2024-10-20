@@ -1,39 +1,57 @@
 package com.e2240438.wordguess;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class WordGuessActivity extends AppCompatActivity {
 
-    private String ranWords="m";
+    private String ranWords="Mango";
     private double point=100;
     private boolean wordLenGet=false;
-    private int guessTime,wordNumber=0;
-    TextView disName,disMark,disPoint;
+    private int guessTime,wordNumber,timeElapsed=0;
+    TextView disName,disMark,disPoint,timeSet;
     EditText getUserGuessWord;
     Button smilerWord,submitBtn,getLen;
+    private Timer timer;
+    private Handler handler = new Handler();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word_guess);
+        startTimer();
         //text box
         disName = findViewById(R.id.txtDisplayName);
         disMark = findViewById(R.id.txtDisplayMarks);
         disPoint=findViewById(R.id.txtDisplayPoints);
         getUserGuessWord=findViewById(R.id.txtGuessWord);
+        timeSet=findViewById(R.id.txtDisplayTime);
         //button
         smilerWord=findViewById(R.id.btnRhymes);
         submitBtn=findViewById(R.id.btnSubmitGuessWord);
@@ -45,7 +63,7 @@ public class WordGuessActivity extends AppCompatActivity {
         disPoint.setText(String.valueOf(point));
 
         //first randem word genarate
-        ranWords=ranWordGenarate();
+        //ranWordGenarate();
 
         //enter word and click submit button
         submitBtn.setOnClickListener(new View.OnClickListener() {
@@ -66,7 +84,7 @@ public class WordGuessActivity extends AppCompatActivity {
                             Toast.makeText(WordGuessActivity.this, "Correct Guess!", Toast.LENGTH_SHORT).show();
                             wordNumber++;
                             //get anther randem number when user give correct word
-                            ranWords=ranWordGenarate();
+                            ranWordGenarate();
                         } else {
                             //incorrect guess point will subtract 10
                             guessTime++;
@@ -89,7 +107,7 @@ public class WordGuessActivity extends AppCompatActivity {
                     disPoint.setText(String.valueOf(point));
                     guessTime = 0;
                     wordLenGet=false;
-                    ranWords=ranWordGenarate();
+                    ranWordGenarate();
                     smilerWord.setText("Smilar word(disable)");
                 }
 
@@ -118,93 +136,105 @@ public class WordGuessActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(guessTime>=5){
-                    String tip = getSimilarWord(ranWords);
+                    //String tip = getSimilarWord(ranWords);
+                    fetchRhymingWords();
                     point-=5;
                     disPoint.setText(String.valueOf(point));
-                    Toast.makeText(WordGuessActivity.this, tip, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(WordGuessActivity.this, tip, Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
+
     }
 
     //genarate similar word method
-    public static String getSimilarWord(String word){
-        String apiKey = "";  /* Replace with your API key
-        zZ21Eu8d7K+C4XQMp0EHzg==OL7tejgzcAMMVE8BDM  */
-        String wordToRhyme = word;
-        String wordArr="";
+    private void fetchRhymingWords() {
+        String apiUrl = "https://api.api-ninjas.com/v1/rhyme?word=" + ranWords;
 
-        try {
-            URL url = new URL("https://api.api-ninjas.com/v1/rhyme?word=" + wordToRhyme);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            // Set the request method to GET
-            connection.setRequestMethod("GET");
-
-            // Set the API key in the request header
-            connection.setRequestProperty("X-Api-Key", apiKey);
-
-            // Get the response from the API
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            StringBuilder content = new StringBuilder();
-
-            // Read the response line by line
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, apiUrl,
+                response -> {
+                    try {
+                        JSONArray jsonArray = new JSONArray(response);
+                        if (jsonArray.length() > 0) {
+                            String tip = jsonArray.getString(0);
+                            //showResult("Tip: One rhyming word is '" + tip + "'.");
+                            Toast.makeText(this, tip, Toast.LENGTH_SHORT).show();
+                        } else {
+                           // showResult("No rhyming words found.");
+                            Toast.makeText(this, "No rhyming words found.", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        //showResult("Error fetching rhymes.");
+                        Toast.makeText(this, "Error fetching rhymes..", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> {
+                    error.printStackTrace();
+                    //showResult("Error fetching rhymes: " + error.getMessage());
+                }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("X-Api-Key", "zZ21Eu8d7K+C4XQMp0EHzg==OL7tejgzcAMMVE8BDM");
+                /* Replace with your API key  zZ21Eu8d7K+C4XQMp0EHzg==OL7tejgzcAMMVE8BDM  */
+                return headers;
             }
+        };
 
-            // Close the connections
-            in.close();
-            connection.disconnect();
-
-            // Print the response (it will be in JSON format)
-            wordArr=content.toString();
-            System.out.println("Rhyming words: " +wordArr );
-
-            // You can parse the response here if needed (e.g., using a JSON library)
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally {
-            return wordArr;
-        }
+        queue.add(stringRequest);
     }
 
     //randem word genarate method
-    public String ranWordGenarate(){
-        String randomWord="";
-        try {
-            URL url = new URL("https://random-word-api.herokuapp.com/word");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    private void ranWordGenarate() {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "https://random-word-api.herokuapp.com/word";
 
-            // Set the request method to GET
-            connection.setRequestMethod("GET");
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        String word = response.getString(0); // Get the first word from the array
+                        ranWords = word.trim();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, "Error processing response", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> {
+                    error.printStackTrace();
+                    Toast.makeText(this, "Error fetching word: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                });
 
-            // Get the response from the API
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            StringBuilder content = new StringBuilder();
+        queue.add(jsonArrayRequest);
+    }
+    private void startTimer() {
+        timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                // Increment time elapsed
+                timeElapsed++;
 
-            // Read the response line by line
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        timeSet.setText(String.valueOf(timeElapsed)+" seconds");
+                    }
+                });
             }
+        };
 
-            // Close the connections
-            in.close();
-            connection.disconnect();
+        timer.scheduleAtFixedRate(timerTask, 0, 1000);
+    }
 
-            // Print the random word (it's returned as an array, so we need to remove the brackets)
-            randomWord = content.toString();
-            randomWord = randomWord.substring(2, randomWord.length() - 2);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally {
-            return randomWord;
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Stop the timer when the activity is destroyed
+        if (timer != null) {
+            timer.cancel();
         }
-
     }
 }

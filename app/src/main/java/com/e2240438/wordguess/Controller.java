@@ -57,6 +57,6 @@ class Player{
 
     @Override
     public String toString() {
-        return " " + name + " - " +" point = " + mark +"\n";
+        return " " + name + " - " +" Marks = " + mark +"\n";
     }
 }
